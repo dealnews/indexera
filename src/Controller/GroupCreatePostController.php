@@ -92,7 +92,7 @@ class GroupCreatePostController extends BaseController {
             return;
         }
 
-        $repository = new Repository();
+        $repository = Repository::init();
         $existing   = $repository->find('Group', ['slug' => $slug], limit: 1);
 
         if (!empty($existing)) {

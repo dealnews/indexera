@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dealnews\Indexera\Action\Admin;
 
 use Dealnews\Indexera\Repository;
+use DealNews\DataMapper\Repository as BaseRepository;
 use PageMill\HTTP\Response;
 use PageMill\MVC\ActionAbstract;
 
@@ -33,6 +34,13 @@ class ToggleAdminAction extends ActionAbstract {
     public int $current_user_id = 0;
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Flips the is_admin flag and redirects.
      *
      * @param array $data Unused.
@@ -41,11 +49,11 @@ class ToggleAdminAction extends ActionAbstract {
      */
     public function doAction(array $data = []): mixed {
         if ($this->user_id === 0 || $this->user_id === $this->current_user_id) {
-            Response::init()->redirect('/admin/users');
+            $this->doRedirect('/admin/users');
             return null;
         }
 
-        $repository = new Repository();
+        $repository = $this->repository ?? Repository::init();
         $user       = $repository->get('User', $this->user_id);
 
         if ($user !== null) {
@@ -53,8 +61,19 @@ class ToggleAdminAction extends ActionAbstract {
             $repository->save('User', $user);
         }
 
-        Response::init()->redirect('/admin/users');
+        $this->doRedirect('/admin/users');
 
         return null;
+    }
+
+    /**
+     * Redirects the browser. Extracted to allow test overrides.
+     *
+     * @param string $url The destination URL.
+     *
+     * @return void
+     */
+    protected function doRedirect(string $url): void {
+        Response::init()->redirect($url);
     }
 }

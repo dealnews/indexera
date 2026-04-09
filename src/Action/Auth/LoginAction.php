@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dealnews\Indexera\Action\Auth;
 
 use Dealnews\Indexera\Repository;
+use DealNews\DataMapper\Repository as BaseRepository;
 use PageMill\HTTP\Response;
 use PageMill\MVC\ActionAbstract;
 
@@ -41,6 +42,13 @@ class LoginAction extends ActionAbstract {
     public string $next = '';
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Validates credentials and logs the user in.
      *
      * Returns an error key on failure; redirects on success.
@@ -54,7 +62,7 @@ class LoginAction extends ActionAbstract {
             return ['error' => 'Email and password are required.'];
         }
 
-        $repository = new Repository();
+        $repository = $this->repository ?? Repository::init();
         $users      = $repository->find('User', ['email' => $this->email], limit: 1);
         $user       = !empty($users) ? reset($users) : null;
 
@@ -73,8 +81,19 @@ class LoginAction extends ActionAbstract {
             ? $this->next
             : '/dashboard';
 
-        Response::init()->redirect($redirect);
+        $this->doRedirect($redirect);
 
         return null;
+    }
+
+    /**
+     * Redirects the browser. Extracted to allow test overrides.
+     *
+     * @param string $url The destination URL.
+     *
+     * @return void
+     */
+    protected function doRedirect(string $url): void {
+        Response::init()->redirect($url);
     }
 }

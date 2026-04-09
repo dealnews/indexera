@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dealnews\Indexera\Model;
 
 use Dealnews\Indexera\Repository;
+use DealNews\DataMapper\Repository as BaseRepository;
 use PageMill\MVC\ModelAbstract;
 
 /**
@@ -38,6 +39,13 @@ class GroupManageModel extends ModelAbstract {
     public int $current_user_id = 0;
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Loads the group and its members.
      *
      * @return array
@@ -47,7 +55,7 @@ class GroupManageModel extends ModelAbstract {
             return ['not_found' => true];
         }
 
-        $repository = new Repository();
+        $repository = $this->repository ?? Repository::init();
 
         $groups = $repository->find('Group', ['slug' => $this->group_slug], limit: 1);
         $group  = !empty($groups) ? reset($groups) : null;

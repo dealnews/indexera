@@ -32,7 +32,7 @@ class GroupsModel extends ModelAbstract {
      * @return array
      */
     public function getData(): array {
-        $repository   = new Repository();
+        $repository   = Repository::init();
         $current_page = max(1, $this->page);
         $per_page     = self::PER_PAGE;
         $start        = ($current_page - 1) * $per_page;

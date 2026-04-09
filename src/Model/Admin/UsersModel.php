@@ -20,7 +20,7 @@ class UsersModel extends ModelAbstract {
      * @return array
      */
     public function getData(): array {
-        $repository = new Repository();
+        $repository = Repository::init();
         $users      = $repository->find('User', [], order: 'user_id', limit: 10000) ?? [];
 
         return ['users' => array_values($users)];

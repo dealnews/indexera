@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dealnews\Indexera\Model;
 
 use Dealnews\Indexera\Repository;
+use DealNews\DataMapper\Repository as BaseRepository;
 use PageMill\MVC\ModelAbstract;
 
 /**
@@ -37,6 +38,13 @@ class PageEditModel extends ModelAbstract {
     public int $current_user_id = 0;
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Loads the page, its sections, links, and editor list.
      *
      * @return array
@@ -46,7 +54,7 @@ class PageEditModel extends ModelAbstract {
             return ['not_found' => true];
         }
 
-        $repository = new Repository();
+        $repository = $this->repository ?? Repository::init();
         $page       = $repository->get('Page', $this->page_id);
 
         if ($page === null) {

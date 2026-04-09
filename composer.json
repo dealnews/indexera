@@ -19,5 +19,18 @@
         "league/oauth2-google": "^4.0",
         "dealnews/get-config": "^2.0",
         "thenetworg/oauth2-azure": "^2.2"
+    },
+    "scripts": {
+        "test": [
+            "phpunit --colors=never"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dealnews\\Indexera\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.1"
     }
 }

@@ -28,6 +28,29 @@ use Dealnews\Indexera\Mapper\UserMapper;
 class Repository extends \DealNews\DataMapper\Repository {
 
     /**
+     * Shared singleton instance for the current request.
+     *
+     * @var static|null
+     */
+    protected static ?self $instance = null;
+
+    /**
+     * Returns the shared repository instance, creating it on first call.
+     *
+     * Using a singleton ensures the in-memory object cache built up by
+     * the repository is reused across all callers within a request rather
+     * than being discarded every time a new instance is constructed.
+     *
+     * @return static
+     */
+    public static function init(): static {
+        if (static::$instance === null) {
+            static::$instance = new static();
+        }
+        return static::$instance;
+    }
+
+    /**
      * Creates the repository and registers all mappers.
      *
      * @param CRUD|null $crud Optional CRUD instance injected into
