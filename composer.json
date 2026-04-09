@@ -1,0 +1,23 @@
+{
+    "name": "dealnews/indexera",
+    "description": "A link sharing application",
+    "type": "project",
+    "license": "BSD-3-CLAUSE",
+    "autoload": {
+        "psr-4": {
+            "Dealnews\\Indexera\\": "src/"
+        }
+    },
+    "require": {
+        "moonspot/value-objects": "^2.3",
+        "dealnews/db": "^4.1",
+        "pagemill/router": "^3.0",
+        "pagemill/mvc": "^3.0",
+        "dealnews/data-mapper-api": "^2.3",
+        "league/oauth2-client": "^2.7",
+        "league/oauth2-github": "^3.0",
+        "league/oauth2-google": "^4.0",
+        "dealnews/get-config": "^2.0",
+        "thenetworg/oauth2-azure": "^2.2"
+    }
+}

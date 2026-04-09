@@ -1,0 +1,28 @@
+/* Indexera — application styles */
+
+nav .brand-logo {
+    white-space: nowrap;
+}
+
+.page-list-btn {
+    white-space: nowrap;
+}
+
+.page-list-btn .btn-small {
+    padding: 0 8px;
+}
+
+.card .card-content {
+    padding: 12px;
+}
+
+.card-content .collection {
+    border: none;
+    margin-bottom: 0;
+}
+
+.card-content .collection .collection-item {
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+}

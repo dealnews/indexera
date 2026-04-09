@@ -1,0 +1,7 @@
+services:
+  indexera:
+    image: dealnews/indexera:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./etc/config.ini:/app/etc/config.ini:ro

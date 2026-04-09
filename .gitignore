@@ -1,0 +1,5 @@
+/vendor/
+/etc/config.ini
+/.dev/
+.idea
+.DS_Store

@@ -1,0 +1,33 @@
+; Indexera configuration
+; Copy this file to config.ini and fill in the values.
+; Values can also be set as environment variables using the uppercased,
+; underscore form of the key (e.g. oauth.github.client_id → OAUTH_GITHUB_CLIENT_ID).
+
+; Database connection (PDO DSN — SQLite example)
+; db.indexera.type = pdo
+; db.indexera.dsn  = sqlite:/path/to/dev.db
+
+; Database connection (MySQL example)
+; db.indexera.type    = mysql
+; db.indexera.server  = 127.0.0.1
+; db.indexera.port    = 3306
+; db.indexera.db      = indexera
+; db.indexera.user    = root
+; db.indexera.pass    =
+
+
+; GitHub OAuth application credentials
+; Create an app at https://github.com/settings/developers
+oauth.github.client_id     =
+oauth.github.client_secret =
+
+; Google OAuth application credentials
+; Create an app at https://console.developers.google.com
+oauth.google.client_id     =
+oauth.google.client_secret =
+
+; Microsoft OAuth application credentials
+; Register an app at https://portal.azure.com → Azure Active Directory → App registrations
+; Set the redirect URI to https://yourhost/auth/microsoft/callback with the User.Read scope
+oauth.microsoft.client_id     =
+oauth.microsoft.client_secret =

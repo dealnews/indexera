@@ -1,0 +1,14 @@
+#!/bin/sh
+# PHP-FPM runit service script
+#
+# Runs PHP-FPM in foreground mode under runit supervision.
+# Runit will automatically restart PHP-FPM if it crashes.
+
+templates=`find /etc/php/8.4/fpm/pool.d/ -name '*.tmpl'`
+
+for t in $templates; do
+    conffile=`echo $t | sed 's,\.tmpl,,'`
+    dockerize --template "${t}:$conffile"
+done
+
+exec /usr/sbin/php-fpm8.4 --nodaemonize --fpm-config /etc/php/8.4/fpm/php-fpm.conf
