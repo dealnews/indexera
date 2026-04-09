@@ -163,7 +163,7 @@ abstract class BaseController extends ControllerAbstract {
      * @return void
      */
     protected function loadCurrentUser(): void {
-        $repository = new Repository();
+        $repository = Repository::init();
 
         if (!empty($_SESSION['user_id'])) {
             $this->current_user             = $repository->get('User', (int)$_SESSION['user_id']);

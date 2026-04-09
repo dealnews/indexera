@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dealnews\Indexera\Action\Admin;
 
 use Dealnews\Indexera\Repository;
+use DealNews\DataMapper\Repository as BaseRepository;
 use PageMill\HTTP\Response;
 use PageMill\MVC\ActionAbstract;
 
@@ -55,6 +56,13 @@ class SaveSettingsAction extends ActionAbstract {
     public string $nav_icon_url = '';
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Saves the settings and redirects.
      *
      * @param array $data Unused.
@@ -62,7 +70,7 @@ class SaveSettingsAction extends ActionAbstract {
      * @return null
      */
     public function doAction(array $data = []): mixed {
-        $repository = new Repository();
+        $repository = $this->repository ?? Repository::init();
         $settings   = $repository->get('Settings', 1);
 
         if ($settings === null) {
@@ -70,12 +78,12 @@ class SaveSettingsAction extends ActionAbstract {
         }
 
         if ($this->site_title === '') {
-            Response::init()->redirect('/admin/settings?error=site_title');
+            $this->doRedirect('/admin/settings?error=site_title');
             return null;
         }
 
         if ($this->nav_heading === '') {
-            Response::init()->redirect('/admin/settings?error=nav_heading');
+            $this->doRedirect('/admin/settings?error=nav_heading');
             return null;
         }
 
@@ -87,8 +95,19 @@ class SaveSettingsAction extends ActionAbstract {
 
         $repository->save('Settings', $settings);
 
-        Response::init()->redirect('/admin/settings');
+        $this->doRedirect('/admin/settings');
 
         return null;
+    }
+
+    /**
+     * Redirects the browser. Extracted to allow test overrides.
+     *
+     * @param string $url The destination URL.
+     *
+     * @return void
+     */
+    protected function doRedirect(string $url): void {
+        Response::init()->redirect($url);
     }
 }

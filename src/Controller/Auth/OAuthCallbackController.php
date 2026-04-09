@@ -75,7 +75,7 @@ class OAuthCallbackController extends BaseController {
             return;
         }
 
-        $repository = new Repository();
+        $repository = Repository::init();
         $identities = $repository->find('UserIdentity', [
             'provider'    => $provider_name,
             'provider_id' => $provider_uid,

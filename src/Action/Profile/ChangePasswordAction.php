@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dealnews\Indexera\Action\Profile;
 
 use Dealnews\Indexera\Repository;
+use DealNews\DataMapper\Repository as BaseRepository;
 use PageMill\MVC\ActionAbstract;
 
 /**
@@ -51,11 +52,20 @@ class ChangePasswordAction extends ActionAbstract {
     public string $confirm_password = '';
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Validates and applies the password change.
      *
-     * @return array
+     * @param array $data Unused.
+     *
+     * @return mixed
      */
-    public function doAction(): array {
+    public function doAction(array $data = []): mixed {
         if ($this->new_password !== $this->confirm_password) {
             return ['error' => 'New passwords do not match.'];
         }
@@ -64,7 +74,7 @@ class ChangePasswordAction extends ActionAbstract {
             return ['error' => 'New password must be at least 8 characters.'];
         }
 
-        $repository = new Repository();
+        $repository = $this->repository ?? Repository::init();
         $user       = $repository->get('User', $this->user_id);
 
         if ($user === null || !password_verify($this->current_password, $user->password)) {
@@ -74,7 +84,20 @@ class ChangePasswordAction extends ActionAbstract {
         $user->password = password_hash($this->new_password, PASSWORD_DEFAULT);
         $repository->save('User', $user);
 
-        header('Location: /profile');
+        $this->doRedirect('/profile');
+
+        return null;
+    }
+
+    /**
+     * Redirects the browser. Extracted to allow test overrides.
+     *
+     * @param string $url The destination URL.
+     *
+     * @return void
+     */
+    protected function doRedirect(string $url): void {
+        header('Location: ' . $url);
         exit;
     }
 }

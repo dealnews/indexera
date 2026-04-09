@@ -8,6 +8,7 @@ use Dealnews\Indexera\Data\User;
 use Dealnews\Indexera\Repository;
 use PageMill\HTTP\Response;
 use PageMill\MVC\ActionAbstract;
+use DealNews\DataMapper\Repository as BaseRepository;
 
 /**
  * Creates a new user account from registration form input.
@@ -50,6 +51,13 @@ class RegisterAction extends ActionAbstract {
     public string $password_confirm = '';
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Validates input, creates the account, and logs the user in.
      *
      * Returns an error key on failure; redirects on success.
@@ -81,7 +89,7 @@ class RegisterAction extends ActionAbstract {
             return ['error' => 'Passwords do not match.'];
         }
 
-        $repository = new Repository();
+        $repository = $this->repository ?? Repository::init();
         $existing   = $repository->find('User', ['email' => $this->email], limit: 1);
 
         if (!empty($existing)) {
@@ -100,8 +108,19 @@ class RegisterAction extends ActionAbstract {
 
         $_SESSION['user_id'] = $user->user_id;
 
-        Response::init()->redirect('/dashboard');
+        $this->doRedirect('/dashboard');
 
         return null;
+    }
+
+    /**
+     * Redirects the browser. Extracted to allow test overrides.
+     *
+     * @param string $url The destination URL.
+     *
+     * @return void
+     */
+    protected function doRedirect(string $url): void {
+        Response::init()->redirect($url);
     }
 }

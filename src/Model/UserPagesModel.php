@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dealnews\Indexera\Model;
 
 use Dealnews\Indexera\Repository;
+use DealNews\DataMapper\Repository as BaseRepository;
 use PageMill\MVC\ModelAbstract;
 
 /**
@@ -31,6 +32,13 @@ class UserPagesModel extends ModelAbstract {
     public int $user_id = 0;
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Returns the user's pages sorted by title.
      *
      * @return array
@@ -40,7 +48,7 @@ class UserPagesModel extends ModelAbstract {
             return ['pages' => [], 'groups' => []];
         }
 
-        $repository    = new Repository();
+        $repository    = $this->repository ?? Repository::init();
         $pages         = [];
         $seen_page_ids = [];
 

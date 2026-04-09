@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dealnews\Indexera\Model;
 
 use Dealnews\Indexera\Repository;
+use DealNews\DataMapper\Repository as BaseRepository;
 use PageMill\MVC\ModelAbstract;
 
 /**
@@ -47,12 +48,19 @@ class PageViewModel extends ModelAbstract {
     public int $current_user_id = 0;
 
     /**
+     * Repository instance. Injected for testing; production code creates its own.
+     *
+     * @var BaseRepository|null
+     */
+    protected ?BaseRepository $repository = null;
+
+    /**
      * Loads the page, its owner or group, sections, links, and subscription status.
      *
      * @return array
      */
     public function getData(): array {
-        $repository = new Repository();
+        $repository = $this->repository ?? Repository::init();
 
         $settings = $repository->get('Settings', 1);
         if ($settings !== null &&
