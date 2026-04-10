@@ -13,7 +13,7 @@ nav .brand-logo {
 }
 
 .card .card-content {
-    padding: 8px 12px 0;
+    padding: 12px;
 }
 
 .card-content .collection {
@@ -24,4 +24,8 @@ nav .brand-logo {
 .card-content .collection .collection-item {
     padding-left: 0;
     padding-right: 0;
+}
+
+.card-content .collection .collection-item:last-child {
+    padding-bottom: 0;
 }
