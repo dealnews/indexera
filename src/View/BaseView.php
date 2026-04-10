@@ -93,7 +93,7 @@ abstract class BaseView extends HTMLAbstract {
                     ? htmlspecialchars($icon_src, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
                     : '/icon-white.svg';
             ?>
-            <img src="<?= $icon_src ?>" alt="" width="40" height="40" style="vertical-align: middle; margin-right: 8px;">
+            <img src="<?= $icon_src ?>" alt="" width="40" height="40" style="vertical-align: middle; margin-right: 8px; margin-top: -8px;">
             <?= htmlspecialchars($this->settings?->nav_heading ?? 'Indexera', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
         </a>
         <a href="#" data-target="mobile-sidenav" class="sidenav-trigger">

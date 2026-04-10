@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dealnews\Indexera\Controller\Auth;
 
+use Dealnews\Indexera\Controller\BaseController;
 use Dealnews\Indexera\Data\User;
 use Dealnews\Indexera\Data\UserIdentity;
 use Dealnews\Indexera\Repository;
@@ -77,8 +78,8 @@ class OAuthCallbackController extends BaseController {
 
         $repository = Repository::init();
         $identities = $repository->find('UserIdentity', [
-            'provider'    => $provider_name,
-            'provider_id' => $provider_uid,
+            'provider'         => $provider_name,
+            'provider_user_id' => $provider_uid,
         ], limit: 1);
 
         if (!empty($identities)) {
@@ -100,14 +101,21 @@ class OAuthCallbackController extends BaseController {
         if ($user === null) {
             $is_first_user = empty($repository->find('User', [], limit: 1));
 
-            $source   = $name !== '' ? $name : $email;
-            $username = strtolower($source);
+            $source   = $email !== '' ? strstr($email, '@', true) : $name;
+            $username = strtolower((string)$source);
             $username = preg_replace('/\s+/', '_', $username);
             $username = preg_replace('/[^a-z0-9_-]+/', '', $username);
             $username = trim($username, '_-');
 
             if ($username === '') {
                 $username = 'user' . time();
+            }
+
+            $base_username = $username;
+            $suffix        = 2;
+            while (!empty($repository->find('User', ['display_name' => $username], limit: 1))) {
+                $username = $base_username . '_' . $suffix;
+                $suffix++;
             }
 
             $user               = new User();
@@ -121,7 +129,7 @@ class OAuthCallbackController extends BaseController {
         $identity              = new UserIdentity();
         $identity->user_id     = $user->user_id;
         $identity->provider    = $provider_name;
-        $identity->provider_id = $provider_uid;
+        $identity->provider_user_id = $provider_uid;
         $repository->save('UserIdentity', $identity);
 
         $_SESSION['user_id'] = $user->user_id;
