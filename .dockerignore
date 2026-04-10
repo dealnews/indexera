@@ -1,4 +1,7 @@
+assets
+.claude
 .git
+.github
 .dev
 .dockerignore
 docker-compose.yml

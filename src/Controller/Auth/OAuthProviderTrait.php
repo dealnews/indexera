@@ -32,7 +32,7 @@ trait OAuthProviderTrait {
      */
     protected function buildProvider(string $provider_name): ?\League\OAuth2\Client\Provider\AbstractProvider {
         $config   = GetConfig::init();
-        $base_url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') .
+        $base_url = (isset($_SERVER['HTTPS']) || getenv('FORCE_HTTPS') ? 'https' : 'http') .
                     '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
 
         $provider = match ($provider_name) {

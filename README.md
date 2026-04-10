@@ -194,6 +194,29 @@ oauth.microsoft.client_secret = your-client-secret
 
 If a user authenticates via OAuth and their email matches an existing account, the OAuth identity is linked to that account automatically rather than creating a duplicate.
 
+### HTTPS Behind a Proxy or Load Balancer
+
+OAuth redirect URIs must use `https`. If you run PHP behind an HTTPS load balancer or reverse proxy with an HTTP backend, PHP won't see `$_SERVER['HTTPS']` and will construct `http://` callback URLs, causing provider errors.
+
+Set the `FORCE_HTTPS` environment variable to tell Indexera to always use `https` when building OAuth redirect URIs:
+
+```sh
+FORCE_HTTPS=1
+```
+
+How you set this depends on your environment. For example, in an Apache `VirtualHost`:
+
+```apache
+SetEnv FORCE_HTTPS 1
+```
+
+Or in a systemd service unit:
+
+```ini
+[Service]
+Environment=FORCE_HTTPS=1
+```
+
 ---
 
 ## Tech Stack
