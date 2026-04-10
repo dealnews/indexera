@@ -43,6 +43,7 @@ class SettingsPostController extends BaseAdminController {
                 'nav_heading'        => FILTER_DEFAULT,
                 'public_pages'       => FILTER_DEFAULT,
                 'allow_registration' => FILTER_DEFAULT,
+                'nav_icon_url'       => FILTER_DEFAULT,
             ],
         ];
     }
